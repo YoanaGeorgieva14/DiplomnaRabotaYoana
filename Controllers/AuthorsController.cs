@@ -9,90 +9,85 @@ using SoundEffect.Data;
 
 namespace SoundEffect.Controllers
 {
-    public class ItemsController : Controller
+    public class AuthorsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public ItemsController(ApplicationDbContext context)
+        public AuthorsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Items
+        // GET: Authors
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Items.Include(i => i.Authors);
-            return View(await applicationDbContext.ToListAsync());
+              return View(await _context.Authors.ToListAsync());
         }
 
-        // GET: Items/Details/5
-        public async Task<IActionResult> Details(string id)
+        // GET: Authors/Details/5
+        public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Items == null)
+            if (id == null || _context.Authors == null)
             {
                 return NotFound();
             }
 
-            var item = await _context.Items
-                .Include(i => i.Authors)
+            var author = await _context.Authors
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (item == null)
+            if (author == null)
             {
                 return NotFound();
             }
 
-            return View(item);
+            return View(author);
         }
 
-        // GET: Items/Create
+        // GET: Authors/Create
         public IActionResult Create()
         {
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "Id");
             return View();
         }
 
-        // POST: Items/Create
+        // POST: Authors/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CatalogNum,Name,GenreId,Carrier,Category,Description,Price,Quantity,AuthorId,PictureUrl,DateOfAdding")] Item item)
+        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName")] Author author)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(item);
+                _context.Add(author);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "Id", item.AuthorId);
-            return View(item);
+            return View(author);
         }
 
-        // GET: Items/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        // GET: Authors/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Items == null)
+            if (id == null || _context.Authors == null)
             {
                 return NotFound();
             }
 
-            var item = await _context.Items.FindAsync(id);
-            if (item == null)
+            var author = await _context.Authors.FindAsync(id);
+            if (author == null)
             {
                 return NotFound();
             }
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "Id", item.AuthorId);
-            return View(item);
+            return View(author);
         }
 
-        // POST: Items/Edit/5
+        // POST: Authors/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,CatalogNum,Name,GenreId,Carrier,Category,Description,Price,Quantity,AuthorId,PictureUrl,DateOfAdding")] Item item)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName")] Author author)
         {
-            if (id != item.Id)
+            if (id != author.Id)
             {
                 return NotFound();
             }
@@ -101,12 +96,12 @@ namespace SoundEffect.Controllers
             {
                 try
                 {
-                    _context.Update(item);
+                    _context.Update(author);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ItemExists(item.Id))
+                    if (!AuthorExists(author.Id))
                     {
                         return NotFound();
                     }
@@ -117,51 +112,49 @@ namespace SoundEffect.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "Id", item.AuthorId);
-            return View(item);
+            return View(author);
         }
 
-        // GET: Items/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        // GET: Authors/Delete/5
+        public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Items == null)
+            if (id == null || _context.Authors == null)
             {
                 return NotFound();
             }
 
-            var item = await _context.Items
-                .Include(i => i.Authors)
+            var author = await _context.Authors
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (item == null)
+            if (author == null)
             {
                 return NotFound();
             }
 
-            return View(item);
+            return View(author);
         }
 
-        // POST: Items/Delete/5
+        // POST: Authors/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Items == null)
+            if (_context.Authors == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.Items'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.Authors'  is null.");
             }
-            var item = await _context.Items.FindAsync(id);
-            if (item != null)
+            var author = await _context.Authors.FindAsync(id);
+            if (author != null)
             {
-                _context.Items.Remove(item);
+                _context.Authors.Remove(author);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ItemExists(string id)
+        private bool AuthorExists(int id)
         {
-          return _context.Items.Any(e => e.Id == id);
+          return _context.Authors.Any(e => e.Id == id);
         }
     }
 }

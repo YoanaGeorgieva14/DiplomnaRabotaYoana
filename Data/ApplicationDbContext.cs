@@ -4,14 +4,16 @@ using SoundEffect.Data;
 
 namespace SoundEffect.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<Client>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
-        public DbSet<SoundEffect.Data.Items> Items { get; set; }
-        public DbSet<SoundEffect.Data.Genre> Genre { get; set; }
-        public DbSet<SoundEffect.Data.ShoppingCart> ShoppingCart { get; set; }
+        public DbSet<Item> Items { get; set; }
+        public DbSet<Genre> Genres { get; set; }
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+        public DbSet<Author> Authors { get; set; }
+        
     }
 }

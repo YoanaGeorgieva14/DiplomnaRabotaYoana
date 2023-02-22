@@ -21,18 +21,20 @@ namespace SoundEffect.Controllers
         // GET: ShoppingCarts
         public async Task<IActionResult> Index()
         {
-              return View(await _context.ShoppingCart.ToListAsync());
+            var applicationDbContext = _context.ShoppingCarts.Include(s => s.Clients);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: ShoppingCarts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.ShoppingCart == null)
+            if (id == null || _context.ShoppingCarts == null)
             {
                 return NotFound();
             }
 
-            var shoppingCart = await _context.ShoppingCart
+            var shoppingCart = await _context.ShoppingCarts
+                .Include(s => s.Clients)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (shoppingCart == null)
             {
@@ -45,6 +47,7 @@ namespace SoundEffect.Controllers
         // GET: ShoppingCarts/Create
         public IActionResult Create()
         {
+            ViewData["ClientId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
@@ -53,7 +56,7 @@ namespace SoundEffect.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ClientId,Quantity,DateOfOrder")] ShoppingCart shoppingCart)
+        public async Task<IActionResult> Create([Bind("Id,ClientId,ItemId,Quantity,DateOfOrder")] ShoppingCart shoppingCart)
         {
             if (ModelState.IsValid)
             {
@@ -61,22 +64,24 @@ namespace SoundEffect.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ClientId"] = new SelectList(_context.Users, "Id", "Id", shoppingCart.ClientId);
             return View(shoppingCart);
         }
 
         // GET: ShoppingCarts/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.ShoppingCart == null)
+            if (id == null || _context.ShoppingCarts == null)
             {
                 return NotFound();
             }
 
-            var shoppingCart = await _context.ShoppingCart.FindAsync(id);
+            var shoppingCart = await _context.ShoppingCarts.FindAsync(id);
             if (shoppingCart == null)
             {
                 return NotFound();
             }
+            ViewData["ClientId"] = new SelectList(_context.Users, "Id", "Id", shoppingCart.ClientId);
             return View(shoppingCart);
         }
 
@@ -85,7 +90,7 @@ namespace SoundEffect.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ClientId,Quantity,DateOfOrder")] ShoppingCart shoppingCart)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ClientId,ItemId,Quantity,DateOfOrder")] ShoppingCart shoppingCart)
         {
             if (id != shoppingCart.Id)
             {
@@ -112,18 +117,20 @@ namespace SoundEffect.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ClientId"] = new SelectList(_context.Users, "Id", "Id", shoppingCart.ClientId);
             return View(shoppingCart);
         }
 
         // GET: ShoppingCarts/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.ShoppingCart == null)
+            if (id == null || _context.ShoppingCarts == null)
             {
                 return NotFound();
             }
 
-            var shoppingCart = await _context.ShoppingCart
+            var shoppingCart = await _context.ShoppingCarts
+                .Include(s => s.Clients)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (shoppingCart == null)
             {
@@ -138,14 +145,14 @@ namespace SoundEffect.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.ShoppingCart == null)
+            if (_context.ShoppingCarts == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.ShoppingCart'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.ShoppingCarts'  is null.");
             }
-            var shoppingCart = await _context.ShoppingCart.FindAsync(id);
+            var shoppingCart = await _context.ShoppingCarts.FindAsync(id);
             if (shoppingCart != null)
             {
-                _context.ShoppingCart.Remove(shoppingCart);
+                _context.ShoppingCarts.Remove(shoppingCart);
             }
             
             await _context.SaveChangesAsync();
@@ -154,7 +161,7 @@ namespace SoundEffect.Controllers
 
         private bool ShoppingCartExists(int id)
         {
-          return _context.ShoppingCart.Any(e => e.Id == id);
+          return _context.ShoppingCarts.Any(e => e.Id == id);
         }
     }
 }

@@ -28,10 +28,8 @@ namespace SoundEffect.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ClientId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Password = table.Column<int>(type: "int", nullable: true),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -53,7 +51,21 @@ namespace SoundEffect.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Genre",
+                name: "Authors",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Authors", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Genres",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -62,29 +74,7 @@ namespace SoundEffect.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Genre", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Items",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CatalogNum = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Genre = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Carrier = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Category = table.Column<int>(type: "int", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<int>(type: "int", nullable: false),
-                    DateOfAdding = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Quantity = table.Column<int>(type: "int", nullable: false),
-                    AuthorId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PictureUrl = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Items", x => x.Id);
+                    table.PrimaryKey("PK_Genres", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -194,47 +184,65 @@ namespace SoundEffect.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ShoppingCart",
+                name: "Items",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ClientId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ItemIdId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CatalogNum = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    GenreId = table.Column<int>(type: "int", nullable: false),
+                    GenresId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Carrier = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Category = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
-                    DateOfOrder = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    AuthorId = table.Column<int>(type: "int", nullable: false),
+                    PictureUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DateOfAdding = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ShoppingCart", x => x.Id);
+                    table.PrimaryKey("PK_Items", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ShoppingCart_Items_ItemIdId",
-                        column: x => x.ItemIdId,
-                        principalTable: "Items",
+                        name: "FK_Items_Authors_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "Authors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Items_Genres_GenresId",
+                        column: x => x.GenresId,
+                        principalTable: "Genres",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ClientShoppingCart",
+                name: "ShoppingCarts",
                 columns: table => new
                 {
-                    ClientsId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ShoppingCartsId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ClientId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ItemId = table.Column<int>(type: "int", nullable: false),
+                    ItemsId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    DateOfOrder = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientShoppingCart", x => new { x.ClientsId, x.ShoppingCartsId });
+                    table.PrimaryKey("PK_ShoppingCarts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ClientShoppingCart_AspNetUsers_ClientsId",
-                        column: x => x.ClientsId,
+                        name: "FK_ShoppingCarts_AspNetUsers_ClientId",
+                        column: x => x.ClientId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ClientShoppingCart_ShoppingCart_ShoppingCartsId",
-                        column: x => x.ShoppingCartsId,
-                        principalTable: "ShoppingCart",
+                        name: "FK_ShoppingCarts_Items_ItemsId",
+                        column: x => x.ItemsId,
+                        principalTable: "Items",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -279,14 +287,24 @@ namespace SoundEffect.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClientShoppingCart_ShoppingCartsId",
-                table: "ClientShoppingCart",
-                column: "ShoppingCartsId");
+                name: "IX_Items_AuthorId",
+                table: "Items",
+                column: "AuthorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ShoppingCart_ItemIdId",
-                table: "ShoppingCart",
-                column: "ItemIdId");
+                name: "IX_Items_GenresId",
+                table: "Items",
+                column: "GenresId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShoppingCarts_ClientId",
+                table: "ShoppingCarts",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShoppingCarts_ItemsId",
+                table: "ShoppingCarts",
+                column: "ItemsId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -307,10 +325,7 @@ namespace SoundEffect.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "ClientShoppingCart");
-
-            migrationBuilder.DropTable(
-                name: "Genre");
+                name: "ShoppingCarts");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -319,10 +334,13 @@ namespace SoundEffect.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "ShoppingCart");
+                name: "Items");
 
             migrationBuilder.DropTable(
-                name: "Items");
+                name: "Authors");
+
+            migrationBuilder.DropTable(
+                name: "Genres");
         }
     }
 }

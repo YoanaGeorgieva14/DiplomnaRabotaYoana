@@ -8,6 +8,8 @@ namespace SoundEffect
     {
         public static void Main(string[] args)
         {
+
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
@@ -20,7 +22,14 @@ namespace SoundEffect
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
+          
+
+            builder.Services.AddControllers(
+                options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true); 
             var app = builder.Build();
+            app.UseAuthentication();
+
+           
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -53,7 +62,7 @@ namespace SoundEffect
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContext<ApplicationDbContext>(options => 
+            services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
         }
