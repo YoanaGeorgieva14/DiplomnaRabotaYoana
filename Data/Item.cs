@@ -5,7 +5,7 @@ namespace SoundEffect.Data
 {
     public class Item
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
         public int CatalogNum { get; set; }
 
         public string Name { get; set; }

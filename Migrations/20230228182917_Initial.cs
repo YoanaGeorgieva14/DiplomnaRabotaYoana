@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SoundEffect.Migrations
 {
-    public partial class SoundEffect : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -68,7 +68,8 @@ namespace SoundEffect.Migrations
                 name: "Genres",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RegisteredOn = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -187,11 +188,11 @@ namespace SoundEffect.Migrations
                 name: "Items",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     CatalogNum = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     GenreId = table.Column<int>(type: "int", nullable: false),
-                    GenresId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Carrier = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Category = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -211,8 +212,8 @@ namespace SoundEffect.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Items_Genres_GenresId",
-                        column: x => x.GenresId,
+                        name: "FK_Items_Genres_GenreId",
+                        column: x => x.GenreId,
                         principalTable: "Genres",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -226,7 +227,6 @@ namespace SoundEffect.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ClientId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ItemId = table.Column<int>(type: "int", nullable: false),
-                    ItemsId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     DateOfOrder = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -240,8 +240,8 @@ namespace SoundEffect.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ShoppingCarts_Items_ItemsId",
-                        column: x => x.ItemsId,
+                        name: "FK_ShoppingCarts_Items_ItemId",
+                        column: x => x.ItemId,
                         principalTable: "Items",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -292,9 +292,9 @@ namespace SoundEffect.Migrations
                 column: "AuthorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Items_GenresId",
+                name: "IX_Items_GenreId",
                 table: "Items",
-                column: "GenresId");
+                column: "GenreId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ShoppingCarts_ClientId",
@@ -302,9 +302,9 @@ namespace SoundEffect.Migrations
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ShoppingCarts_ItemsId",
+                name: "IX_ShoppingCarts_ItemId",
                 table: "ShoppingCarts",
-                column: "ItemsId");
+                column: "ItemId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

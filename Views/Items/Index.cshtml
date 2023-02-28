@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = "Index";
-    Layout = "~/Views/_ViewStart.cshtml";
 }
 
 <h1>Index</h1>
@@ -80,7 +79,7 @@
                 @Html.DisplayFor(modelItem => item.Authors.Id)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PictureUrl)
+                <img src= "@Html.DisplayFor(modelItem => item.PictureUrl)" width="100"/>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DateOfAdding)

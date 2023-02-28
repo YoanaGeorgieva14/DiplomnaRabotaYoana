@@ -12,8 +12,8 @@ using SoundEffect.Data;
 namespace SoundEffect.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230222152808_SoundEffect")]
-    partial class SoundEffect
+    [Migration("20230228182917_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -257,8 +257,11 @@ namespace SoundEffect.Migrations
 
             modelBuilder.Entity("SoundEffect.Data.Genre", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -274,8 +277,11 @@ namespace SoundEffect.Migrations
 
             modelBuilder.Entity("SoundEffect.Data.Item", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("AuthorId")
                         .HasColumnType("int");
@@ -300,10 +306,6 @@ namespace SoundEffect.Migrations
                     b.Property<int>("GenreId")
                         .HasColumnType("int");
 
-                    b.Property<string>("GenresId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -322,7 +324,7 @@ namespace SoundEffect.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.HasIndex("GenresId");
+                    b.HasIndex("GenreId");
 
                     b.ToTable("Items");
                 });
@@ -345,10 +347,6 @@ namespace SoundEffect.Migrations
                     b.Property<int>("ItemId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ItemsId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
@@ -356,7 +354,7 @@ namespace SoundEffect.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.HasIndex("ItemsId");
+                    b.HasIndex("ItemId");
 
                     b.ToTable("ShoppingCarts");
                 });
@@ -422,7 +420,7 @@ namespace SoundEffect.Migrations
 
                     b.HasOne("SoundEffect.Data.Genre", "Genres")
                         .WithMany("Items")
-                        .HasForeignKey("GenresId")
+                        .HasForeignKey("GenreId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -441,7 +439,7 @@ namespace SoundEffect.Migrations
 
                     b.HasOne("SoundEffect.Data.Item", "Items")
                         .WithMany("ShoppingCarts")
-                        .HasForeignKey("ItemsId")
+                        .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

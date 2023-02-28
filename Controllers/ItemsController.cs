@@ -26,7 +26,7 @@ namespace SoundEffect.Controllers
         }
 
         // GET: Items/Details/5
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(int id)
         {
             if (id == null || _context.Items == null)
             {
@@ -47,7 +47,7 @@ namespace SoundEffect.Controllers
         // GET: Items/Create
         public IActionResult Create()
         {
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "Id");
+            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "FirstName");
             return View();
         }
 
@@ -56,20 +56,21 @@ namespace SoundEffect.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CatalogNum,Name,GenreId,Carrier,Category,Description,Price,Quantity,AuthorId,PictureUrl,DateOfAdding")] Item item)
+        public async Task<IActionResult> Create([Bind("CatalogNum,Name,GenreId,Carrier,Category,Description,Price,Quantity,AuthorId,PictureUrl")] Item item)
         {
             if (ModelState.IsValid)
             {
+                item.DateOfAdding = DateTime.Now;
                 _context.Add(item);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "Id", item.AuthorId);
+            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "FirstName", item.AuthorId);
             return View(item);
         }
 
         // GET: Items/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(int id)
         {
             if (id == null || _context.Items == null)
             {
@@ -81,7 +82,7 @@ namespace SoundEffect.Controllers
             {
                 return NotFound();
             }
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "Id", item.AuthorId);
+            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "FirstName", item.AuthorId);
             return View(item);
         }
 
@@ -90,7 +91,7 @@ namespace SoundEffect.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,CatalogNum,Name,GenreId,Carrier,Category,Description,Price,Quantity,AuthorId,PictureUrl,DateOfAdding")] Item item)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CatalogNum,Name,GenreId,Carrier,Category,Description,Price,Quantity,AuthorId,PictureUrl")] Item item)
         {
             if (id != item.Id)
             {
@@ -101,6 +102,7 @@ namespace SoundEffect.Controllers
             {
                 try
                 {
+                    item.DateOfAdding = DateTime.Now;
                     _context.Update(item);
                     await _context.SaveChangesAsync();
                 }
@@ -117,12 +119,12 @@ namespace SoundEffect.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "Id", item.AuthorId);
+            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "FirstName", item.AuthorId);
             return View(item);
         }
 
         // GET: Items/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(int id)
         {
             if (id == null || _context.Items == null)
             {
@@ -143,7 +145,7 @@ namespace SoundEffect.Controllers
         // POST: Items/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Items == null)
             {
@@ -159,7 +161,7 @@ namespace SoundEffect.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ItemExists(string id)
+        private bool ItemExists(int id)
         {
           return _context.Items.Any(e => e.Id == id);
         }

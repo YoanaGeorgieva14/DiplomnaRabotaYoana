@@ -21,11 +21,11 @@ namespace SoundEffect.Controllers
         // GET: Genres
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Genres.ToListAsync());
+            return View(await _context.Genres.ToListAsync());
         }
 
         // GET: Genres/Details/5
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(int id)
         {
             if (id == null || _context.Genres == null)
             {
@@ -53,7 +53,7 @@ namespace SoundEffect.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,RegisteredOn")] Genre genre)
+        public async Task<IActionResult> Create([Bind("Name,RegisteredOn")] Genre genre)
         {
             if (ModelState.IsValid)
             {
@@ -65,7 +65,7 @@ namespace SoundEffect.Controllers
         }
 
         // GET: Genres/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(int id)
         {
             if (id == null || _context.Genres == null)
             {
@@ -85,7 +85,7 @@ namespace SoundEffect.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,RegisteredOn")] Genre genre)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,RegisteredOn")] Genre genre)
         {
             if (id != genre.Id)
             {
@@ -116,7 +116,7 @@ namespace SoundEffect.Controllers
         }
 
         // GET: Genres/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(int id)
         {
             if (id == null || _context.Genres == null)
             {
@@ -136,7 +136,7 @@ namespace SoundEffect.Controllers
         // POST: Genres/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Genres == null)
             {
@@ -147,14 +147,14 @@ namespace SoundEffect.Controllers
             {
                 _context.Genres.Remove(genre);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool GenreExists(string id)
+        private bool GenreExists(int id)
         {
-          return _context.Genres.Any(e => e.Id == id);
+            return _context.Genres.Any(e => e.Id == id);
         }
     }
 }
