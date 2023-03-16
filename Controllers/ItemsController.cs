@@ -28,7 +28,7 @@ namespace SoundEffect.Controllers
         // GET: Items/Details/5
         public async Task<IActionResult> Details(int id)
         {
-            if (id == null || _context.Items == null)
+            if (_context.Items == null)
             {
                 return NotFound();
             }
@@ -72,7 +72,7 @@ namespace SoundEffect.Controllers
         // GET: Items/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
-            if (id == null || _context.Items == null)
+            if (_context.Items == null)
             {
                 return NotFound();
             }
@@ -126,7 +126,7 @@ namespace SoundEffect.Controllers
         // GET: Items/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-            if (id == null || _context.Items == null)
+            if (_context.Items == null)
             {
                 return NotFound();
             }

@@ -27,7 +27,7 @@ namespace SoundEffect.Controllers
         // GET: Genres/Details/5
         public async Task<IActionResult> Details(int id)
         {
-            if (id == null || _context.Genres == null)
+            if ( _context.Genres == null)
             {
                 return NotFound();
             }
@@ -67,7 +67,7 @@ namespace SoundEffect.Controllers
         // GET: Genres/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
-            if (id == null || _context.Genres == null)
+            if (_context.Genres == null)
             {
                 return NotFound();
             }
@@ -118,7 +118,7 @@ namespace SoundEffect.Controllers
         // GET: Genres/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-            if (id == null || _context.Genres == null)
+            if ( _context.Genres == null)
             {
                 return NotFound();
             }

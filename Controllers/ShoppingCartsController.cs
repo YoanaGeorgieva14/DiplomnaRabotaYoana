@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -10,14 +11,16 @@ using SoundEffect.Data;
 
 namespace SoundEffect.Controllers
 {
+    [Authorize]
     public class ShoppingCartsController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<Client> _userManager;
 
-        public ShoppingCartsController(ApplicationDbContext context)
+        public ShoppingCartsController(ApplicationDbContext context, UserManager<Client> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: ShoppingCarts
@@ -86,12 +89,18 @@ namespace SoundEffect.Controllers
         {
             if (ModelState.IsValid)
             {
+                //decimal currentPrice = _context.Items.Find(n => n.Id == shoppingCart.ItemId).Price;
+                //shoppingCart. = shoppingCart.Quantity * currentPrice; //+ _context.ShoppingCarts.Include(x => x.Items)
+                   // .Where(x => x.Id == shoppingCart.ItemId).Select(x => x);
+                shoppingCart.DateOfOrder = DateTime.Now;
+                shoppingCart.ClientId = _userManager.GetUserId(User);
                 _context.Add(shoppingCart);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClientId"] = new SelectList(_context.Users, "Id", "Id", shoppingCart.ClientId);
-            ViewData["ItemId"] = new SelectList(_context.Items, "Id", "Id", shoppingCart.ItemId);
+            //ViewData["ClientId"] = new SelectList(_context.Users, "Id", "Id", shoppingCart.ClientId);
+            shoppingCart.ClientId = _userManager.GetUserId(User);
+            ViewData["ItemId"] = new SelectList(_context.Items, "Id", "Name", shoppingCart.ItemId);
             return View(shoppingCart);
         }
 
@@ -108,8 +117,9 @@ namespace SoundEffect.Controllers
             {
                 return NotFound();
             }
-            ViewData["ClientId"] = new SelectList(_context.Users, "Id", "Id", shoppingCart.ClientId);
-            ViewData["ItemId"] = new SelectList(_context.Items, "Id", "Id", shoppingCart.ItemId);
+            shoppingCart.ClientId = _userManager.GetUserId(User);
+            //ViewData["ClientId"] = new SelectList(_context.Users, "Id", "Name", shoppingCart.ClientId);
+            ViewData["ItemId"] = new SelectList(_context.Items, "Id", "Name", shoppingCart.ItemId);
             return View(shoppingCart);
         }
 
@@ -118,7 +128,7 @@ namespace SoundEffect.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ClientId,ItemId,Quantity,DateOfOrder")] ShoppingCart shoppingCart)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ClientId,ItemId,Quantity")] ShoppingCart shoppingCart)
         {
             if (id != shoppingCart.Id)
             {
@@ -129,7 +139,9 @@ namespace SoundEffect.Controllers
             {
                 try
                 {
-                    _context.Update(shoppingCart);
+                    shoppingCart.ClientId = _userManager.GetUserId(User);
+                    shoppingCart.DateOfOrder = DateTime.Now;
+                    _context.ShoppingCarts.Update(shoppingCart);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -145,8 +157,10 @@ namespace SoundEffect.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClientId"] = new SelectList(_context.Users, "Id", "Id", shoppingCart.ClientId);
-            ViewData["ItemId"] = new SelectList(_context.Items, "Id", "Id", shoppingCart.ItemId);
+
+            //ViewData["ClientId"] = new SelectList(_context.Users, "Id", "Id", shoppingCart.ClientId);
+            shoppingCart.ClientId = _userManager.GetUserId(User);
+            ViewData["ItemId"] = new SelectList(_context.Items, "Id", "Name", shoppingCart.ItemId);
             return View(shoppingCart);
         }
 
