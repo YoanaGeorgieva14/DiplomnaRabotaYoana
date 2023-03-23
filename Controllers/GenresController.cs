@@ -21,13 +21,15 @@ namespace SoundEffect.Controllers
         // GET: Genres
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Genres.ToListAsync());
+              return _context.Genres != null ? 
+                          View(await _context.Genres.ToListAsync()) :
+                          Problem("Entity set 'ApplicationDbContext.Genres'  is null.");
         }
 
         // GET: Genres/Details/5
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(int? id)
         {
-            if ( _context.Genres == null)
+            if (id == null || _context.Genres == null)
             {
                 return NotFound();
             }
@@ -65,9 +67,9 @@ namespace SoundEffect.Controllers
         }
 
         // GET: Genres/Edit/5
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(int? id)
         {
-            if (_context.Genres == null)
+            if (id == null || _context.Genres == null)
             {
                 return NotFound();
             }
@@ -85,7 +87,7 @@ namespace SoundEffect.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,RegisteredOn")] Genre genre)
+        public async Task<IActionResult> Edit(int id, [Bind("Name,RegisteredOn")] Genre genre)
         {
             if (id != genre.Id)
             {
@@ -116,9 +118,9 @@ namespace SoundEffect.Controllers
         }
 
         // GET: Genres/Delete/5
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            if ( _context.Genres == null)
+            if (id == null || _context.Genres == null)
             {
                 return NotFound();
             }
@@ -147,14 +149,14 @@ namespace SoundEffect.Controllers
             {
                 _context.Genres.Remove(genre);
             }
-
+            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool GenreExists(int id)
         {
-            return _context.Genres.Any(e => e.Id == id);
+          return (_context.Genres?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

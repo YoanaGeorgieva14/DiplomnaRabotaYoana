@@ -52,8 +52,8 @@ namespace SoundEffect.Service
             {
                 UserName = "superadmin",
                 Email = "superadmin@gmail.com",
-                FirstName = "Tonya",
-                LastName = "Belezireva",
+                FirstName = "Admin",
+                LastName = "Admiin",
                 PhoneNumber = "0899999999",
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true
