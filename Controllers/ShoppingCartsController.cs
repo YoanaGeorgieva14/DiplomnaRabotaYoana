@@ -99,7 +99,7 @@ namespace SoundEffect.Controllers
                 return RedirectToAction(nameof(Index));
             }
             //ViewData["ClientId"] = new SelectList(_context.Users, "Id", "Id", shoppingCart.ClientId);
-            //shoppingCart.ClientId = _userManager.GetUserId(User);
+            shoppingCart.ClientId = _userManager.GetUserId(User);
             //ViewData["ItemId"] = new SelectList(_context.Items, "Id", "Name", shoppingCart.ItemId);
             return View(shoppingCart);
         }
