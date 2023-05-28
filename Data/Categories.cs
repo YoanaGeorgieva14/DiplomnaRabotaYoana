@@ -2,6 +2,6 @@
 {
     public enum Categories
     {
-        rock, jazz,dance, funk,hiphop, electronic, international, bg
+        Classical, International, BG
     }
 }

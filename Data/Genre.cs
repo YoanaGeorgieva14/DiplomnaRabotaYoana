@@ -7,7 +7,5 @@
         public DateTime RegisteredOn { get; set; }
         public ICollection<Item> Items { get; set; }
 
-
-
     }
 }

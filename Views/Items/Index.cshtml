@@ -4,11 +4,56 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Артикули</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Създай нов запис</a>
 </p>
+@foreach (var item in Model)
+{
+    <div class="card" style="width:30%; height:25%; border-radius:20px; opacity:0.9; ">
+        @*<div class="row">*@
+        <div class="card-body">
+            <h5 class="card-title">
+                @Html.DisplayFor(modelItem => item.Name)
+            </h5>
+            <p class="card-text">
+                @Html.DisplayFor(modelItem => item.Genres.Name)
+            </p>
+            <p class="card-text">
+                @Html.DisplayFor(modelItem => item.Authors.FirstName)
+            </p>
+            <p class="card-subtitle">
+                @Html.DisplayFor(modelItem => item.Price)
+            </p>
+            <div class="card-imag">
+                <img src="@Html.DisplayFor(modelItem => item.PictureUrl)" width="100" />
+            </div>
+
+            <a asp-controller="Items" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a> |
+            <a asp-controller="Items" asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Details</a> |
+            <a asp-controller="Items" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-primary">Delete</a> |
+            <a asp-controller="ShoppingCarts" asp-action="Create" asp-route-medicineId="@item.Id" class="btn btn-primary">Cart</a>
+
+        </div>
+        @*</div>*@
+    </div>
+}
+@*
+<div class="card-deck">
+   @* @foreach (var card in Model)
+    {
+        <div class="card">
+            <img class="card-image" src="@card.PictureUrl" alt="@card.Name" width="50" />
+            <div class="card-body">
+                <h5 class="card-title">@card.Name</h5>
+                <p class="card-text">@card.Description</p>
+                <a href="@card.PictureUrl" class="btn btn-primary">Read More</a>
+            </div>
+        </div>
+    }
+
+</div>*@@*
 <table class="table">
     <thead>
         <tr>
@@ -47,7 +92,7 @@
             </th>
             <th></th>
         </tr>
-    </thead>
+    </thead>*@@*
     <tbody>
         @foreach (var item in Model)
         {
@@ -91,7 +136,7 @@
                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
                     <a asp-controller="ShoppingCarts" asp-action="Create" asp-route-itemId="@item.Id"> Add to cart </a>
                 </td>
-            </tr>
+      @*      </tr>
         }
     </tbody>
-</table>
+</table>*@
