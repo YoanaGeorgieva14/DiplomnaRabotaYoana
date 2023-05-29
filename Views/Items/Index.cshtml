@@ -11,9 +11,9 @@
 </p>
 @foreach (var item in Model)
 {
-    <div class="card" style="width:30%; height:25%; border-radius:20px; opacity:0.9; ">
+    <div class="card" style="width:30%; height:25%; border-radius:20px; opacity:0.9; border-color:plum ">
         @*<div class="row">*@
-        <div class="card-body">
+        <div class="card-body" >
             <h5 class="card-title">
                 @Html.DisplayFor(modelItem => item.Name)
             </h5>
@@ -26,9 +26,11 @@
             <p class="card-subtitle">
                 @Html.DisplayFor(modelItem => item.Price)
             </p>
+            <br />
             <div class="card-imag">
                 <img src="@Html.DisplayFor(modelItem => item.PictureUrl)" width="100" />
             </div>
+            <br />
 
             @if (User.IsInRole("Admin"))
             {
@@ -52,7 +54,11 @@
         </div>
         @*</div>*@
     </div>
+    
+    <br />
 }
+<br />
+<br />
 @*
 <div class="card-deck">
    @* @foreach (var card in Model)
