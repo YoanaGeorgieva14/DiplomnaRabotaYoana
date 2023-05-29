@@ -94,8 +94,8 @@ namespace SoundEffect.Controllers
                    // .Where(x => x.Id == shoppingCart.ItemId).Select(x => x);
                 shoppingCart.DateOfOrder = DateTime.Now;
                 shoppingCart.ClientId = _userManager.GetUserId(User);
-                _context.Add(shoppingCart);
-                await _context.SaveChangesAsync();
+                _context.ShoppingCarts.Add(shoppingCart);
+                //await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             //ViewData["ClientId"] = new SelectList(_context.Users, "Id", "Id", shoppingCart.ClientId);
